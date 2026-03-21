@@ -160,7 +160,7 @@ function FeaturedOpinion({ opinion, onOpen, onLike, user }) {
               </div>
             </div>
             <div style={{ display:"flex",alignItems:"center",gap:"16px" }}>
-              <button onClick={e=>{ e.stopPropagation(); onLike(); }} style={{ background:"transparent",border:"none",cursor:"pointer",color: liked?"#c8973a":"#6b6560",fontSize:"0.9rem",display:"flex",alignItems:"center",gap:"5px",fontFamily:"'Courier New',monospace",fontSize:"11px",transition:"all 0.2s" }}>
+              <button onClick={e=>{ e.stopPropagation(); onLike(); }} style={{ background:"transparent",border:"none",cursor:"pointer",color: liked?"#c8973a":"#6b6560",display:"flex",alignItems:"center",gap:"5px",fontFamily:"'Courier New',monospace",fontSize:"11px",transition:"all 0.2s" }}>
                 {liked?"♥":"♡"} {opinion.likes?.length||0}
               </button>
               <span style={{ fontFamily:"'Courier New',monospace",fontSize:"10px",color:"#6b6560" }}>💬 {opinion.commentsCount||0}</span>
