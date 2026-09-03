@@ -1,117 +1,317 @@
-const NAV_CATEGORIES = ["general", "technology", "sports", "business"];
+const NAV_CATEGORIES = [
+  "general",
+  "technology",
+  "sports",
+  "business",
+];
 
 export default function Navbar({
-  activeCategory, onCategoryClick, onShowTrending, onShowBookmarks,
-  bookmarkCount, searchInput, onSearchInputChange, onSearch,
+  activeCategory,
+  onCategoryClick,
+  onShowTrending,
+  onShowBookmarks,
+  bookmarkCount,
+  searchInput,
+  onSearchInputChange,
+  onSearch,
 }) {
-  return (
-    <nav style={{
-      background: "linear-gradient(180deg,#111111 0%,#0d0d0d 100%)",
-      borderBottom: "1px solid rgba(200,151,58,0.25)",
-      position: "sticky", top: 0, zIndex: 100,
-      boxShadow: "0 4px 32px rgba(0,0,0,0.6)",
-    }}>
-      <div style={{ maxWidth:"1280px", margin:"0 auto", padding:"0 24px" }}>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"12px", padding:"14px 0" }}>
+  const navButtonStyle = (active = false) => ({
+    padding: "8px 15px",
+    background: active
+      ? "rgba(167,122,53,0.07)"
+      : "transparent",
+    border: active
+      ? "1px solid rgba(167,122,53,0.38)"
+      : "1px solid transparent",
+    borderRadius: "2px",
 
-          {/* Nav links */}
-          <div style={{ display:"flex", alignItems:"center", gap:"4px", flexWrap:"wrap" }}>
+    color: active ? "#8f672d" : "#28241e",
+
+    fontFamily:
+      '"Cormorant Garamond", Georgia, serif',
+
+    fontSize: "14px",
+    fontWeight: 600,
+    letterSpacing: "0.09em",
+    textTransform: "uppercase",
+
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+
+    whiteSpace: "nowrap",
+  });
+
+  return (
+    <nav
+      style={{
+        background: "rgba(250,247,239,0.97)",
+        borderBottom: "1px solid rgba(130,95,42,0.28)",
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+
+        boxShadow: "0 1px 8px rgba(60,40,10,0.04)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1240px",
+          margin: "0 auto",
+          padding: "0 24px",
+        }}
+      >
+        {/* Main navbar row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+
+            flexWrap: "wrap",
+            gap: "10px",
+
+            padding: "10px 0 8px",
+          }}
+        >
+          {/* LEFT NAVIGATION */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "2px",
+              flexWrap: "wrap",
+            }}
+          >
+            {/* Categories */}
             {NAV_CATEGORIES.map((cat) => (
-              <button key={cat} onClick={() => onCategoryClick(cat)}
-                style={{
-                  padding: "7px 16px",
-                  background: activeCategory === cat ? "rgba(200,151,58,0.15)" : "transparent",
-                  border: activeCategory === cat ? "1px solid rgba(200,151,58,0.5)" : "1px solid transparent",
-                  borderRadius: "3px",
-                  color: activeCategory === cat ? "#c8973a" : "#9a9090",
-                  fontFamily: "'Courier New', monospace",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
+              <button
+                key={cat}
+                className="navbar-font"
+                onClick={() => onCategoryClick(cat)}
+                style={navButtonStyle(activeCategory === cat)}
+                onMouseEnter={(e) => {
+                  if (activeCategory !== cat) {
+                    e.currentTarget.style.color = "#8f672d";
+                    e.currentTarget.style.background =
+                      "rgba(167,122,53,0.045)";
+                  }
                 }}
-                onMouseEnter={e => { if(activeCategory!==cat){ e.target.style.color="#c8973a"; e.target.style.borderColor="rgba(200,151,58,0.3)"; }}}
-                onMouseLeave={e => { if(activeCategory!==cat){ e.target.style.color="#9a9090"; e.target.style.borderColor="transparent"; }}}
-              >{cat}</button>
+                onMouseLeave={(e) => {
+                  if (activeCategory !== cat) {
+                    e.currentTarget.style.color = "#28241e";
+                    e.currentTarget.style.background =
+                      "transparent";
+                  }
+                }}
+              >
+                {cat}
+              </button>
             ))}
 
-            {/* Separator */}
-            <div style={{ width:"1px", height:"24px", background:"rgba(200,151,58,0.2)", margin:"0 8px" }} />
+            {/* Divider */}
+            <div
+              style={{
+                width: "1px",
+                height: "24px",
+
+                background:
+                  "rgba(130,95,42,0.28)",
+
+                margin: "0 10px",
+              }}
+            />
+
+            {/* Opinion */}
+            <button
+              className="navbar-font"
+              onClick={onShowTrending}
+              style={navButtonStyle()}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#8f672d";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#28241e";
+              }}
+            >
+              <span style={{ marginRight: "6px" }}>
+                ✍
+              </span>
+              Opinion
+            </button>
 
             {/* Trending */}
-            <button onClick={onShowTrending}
-              style={{
-                padding:"7px 16px", background:"transparent",
-                border:"1px solid transparent", borderRadius:"3px",
-                color:"#e8b85a", fontFamily:"'Courier New',monospace",
-                fontSize:"11px", fontWeight:700, letterSpacing:"0.15em",
-                textTransform:"uppercase", cursor:"pointer", transition:"all 0.2s",
-                display:"flex", alignItems:"center", gap:"6px",
+            <button
+              className="navbar-font"
+              onClick={onShowTrending}
+              style={navButtonStyle()}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#8f672d";
               }}
-              onMouseEnter={e=>e.currentTarget.style.background="rgba(232,184,90,0.1)"}
-              onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#28241e";
+              }}
             >
-              <span>🔥</span> Trending
+              <span style={{ marginRight: "6px" }}>
+                🔥
+              </span>
+              Trending
             </button>
 
             {/* Bookmarks */}
-            <button onClick={onShowBookmarks}
-              style={{
-                padding:"7px 16px",
-                background: bookmarkCount > 0 ? "rgba(200,151,58,0.1)" : "transparent",
-                border: bookmarkCount > 0 ? "1px solid rgba(200,151,58,0.4)" : "1px solid transparent",
-                borderRadius:"3px", color:"#c8973a",
-                fontFamily:"'Courier New',monospace", fontSize:"11px",
-                fontWeight:700, letterSpacing:"0.15em", textTransform:"uppercase",
-                cursor:"pointer", transition:"all 0.2s",
-                display:"flex", alignItems:"center", gap:"8px",
-              }}
-              onMouseEnter={e=>e.currentTarget.style.background="rgba(200,151,58,0.15)"}
-              onMouseLeave={e=>e.currentTarget.style.background=bookmarkCount>0?"rgba(200,151,58,0.1)":"transparent"}
-            >
-              📌 Bookmarks
-              <span style={{
-                background:"#c8973a", color:"#0a0a0a",
-                fontSize:"10px", fontWeight:900,
-                padding:"1px 7px", borderRadius:"10px", minWidth:"20px", textAlign:"center",
-              }}>{bookmarkCount}</span>
-            </button>
-          </div>
+           {/* Bookmarks */}
+<button
+  className="navbar-font"
+  onClick={onShowBookmarks}
+  style={{
+    ...navButtonStyle(bookmarkCount > 0),
+    display: "flex",
+    alignItems: "center",
+    gap: "7px",
+    color: bookmarkCount > 0 ? "#8f672d" : "#29251f",
+    fontFamily: '"Cormorant Garamond", Georgia, serif',
+    fontWeight: 600,
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.color = "#8f672d";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.color =
+      bookmarkCount > 0 ? "#8f672d" : "#29251f";
+  }}
+>
+  <span>📌</span>
 
-          {/* Search */}
-          <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-            <input
-              type="text" value={searchInput}
-              onChange={e => onSearchInputChange(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && onSearch()}
-              placeholder="Search articles…"
-              style={{
-                width:"220px", padding:"8px 16px",
-                background:"rgba(255,255,255,0.05)",
-                border:"1px solid rgba(200,151,58,0.25)",
-                borderRadius:"3px", color:"#faf6ef",
-                fontFamily:"'Courier New',monospace", fontSize:"12px",
-                outline:"none", transition:"all 0.2s",
-              }}
-              onFocus={e=>{ e.target.style.border="1px solid rgba(200,151,58,0.6)"; e.target.style.background="rgba(200,151,58,0.05)"; }}
-              onBlur={e=>{ e.target.style.border="1px solid rgba(200,151,58,0.25)"; e.target.style.background="rgba(255,255,255,0.05)"; }}
-            />
-            <button onClick={onSearch}
-              style={{
-                padding:"8px 20px",
-                background:"linear-gradient(135deg,#c8973a,#e8b85a)",
-                border:"none", borderRadius:"3px",
-                color:"#0a0a0a", fontFamily:"'Courier New',monospace",
-                fontSize:"11px", fontWeight:900, letterSpacing:"0.1em",
-                textTransform:"uppercase", cursor:"pointer",
-                transition:"all 0.2s", boxShadow:"0 2px 12px rgba(200,151,58,0.3)",
-              }}
-              onMouseEnter={e=>{ e.target.style.transform="translateY(-1px)"; e.target.style.boxShadow="0 4px 20px rgba(200,151,58,0.5)"; }}
-              onMouseLeave={e=>{ e.target.style.transform=""; e.target.style.boxShadow="0 2px 12px rgba(200,151,58,0.3)"; }}
-            >Search</button>
+  <span>Bookmarks</span>
+
+  <span
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minWidth: "19px",
+      height: "15px",
+      padding: "0 5px",
+      background: "#a77a35",
+      color: "#fffaf0",
+      fontFamily: '"IBM Plex Mono", monospace',
+      fontSize: "8px",
+      fontWeight: 600,
+      borderRadius: "9px",
+    }}
+  >
+    {bookmarkCount}
+  </span>
+</button>
           </div>
+        </div>
+
+        {/* SEARCH ROW */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+
+            gap: "8px",
+
+            paddingBottom: "10px",
+          }}
+        >
+          {/* Search input */}
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) =>
+              onSearchInputChange(e.target.value)
+            }
+            onKeyDown={(e) =>
+              e.key === "Enter" && onSearch()
+            }
+            placeholder="Search articles..."
+            style={{
+              width: "220px",
+
+              padding: "8px 13px",
+
+              background:
+                "rgba(255,255,255,0.38)",
+
+              border:
+                "1px solid rgba(130,95,42,0.34)",
+
+              borderRadius: "2px",
+
+              color: "#171512",
+
+              fontFamily:
+                '"IBM Plex Mono", "Courier New", monospace',
+
+              fontSize: "9px",
+
+              outline: "none",
+
+              transition: "all 0.2s ease",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.border =
+                "1px solid rgba(130,95,42,0.65)";
+
+              e.currentTarget.style.background =
+                "rgba(255,255,255,0.65)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.border =
+                "1px solid rgba(130,95,42,0.34)";
+
+              e.currentTarget.style.background =
+                "rgba(255,255,255,0.38)";
+            }}
+          />
+
+          {/* Search button */}
+          <button
+            onClick={onSearch}
+            style={{
+              padding: "9px 20px",
+
+              background: "#a77a35",
+
+              border: "none",
+              borderRadius: "2px",
+
+              color: "#fff9ed",
+
+              fontFamily:
+                '"IBM Plex Mono", monospace',
+
+              fontSize: "8px",
+              fontWeight: 600,
+
+              letterSpacing: "0.13em",
+
+              textTransform: "uppercase",
+
+              cursor: "pointer",
+
+              transition:
+                "background 0.2s ease, transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background =
+                "#8f672d";
+
+              e.currentTarget.style.transform =
+                "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                "#a77a35";
+
+              e.currentTarget.style.transform =
+                "translateY(0)";
+            }}
+          >
+            Search
+          </button>
         </div>
       </div>
     </nav>

@@ -19,7 +19,12 @@ const SOURCE_CONFIG = [
   { id: "indian-express", label: "Indian Express" },
   { id: "times-of-india", label: "Times of India" },
 ];
-const EMPTY_ARTICLES = { "the-hindu":[], "indian-express":[], "times-of-india":[] };
+
+const EMPTY_ARTICLES = {
+  "the-hindu": [],
+  "indian-express": [],
+  "times-of-india": [],
+};
 
 function AppInner() {
   const [articles, setArticles] = useState(EMPTY_ARTICLES);
@@ -38,121 +43,425 @@ function AppInner() {
   const [trendingError, setTrendingError] = useState(null);
 
   const [bookmarks, setBookmarks] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("newsBookmarks") || "[]"); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem("newsBookmarks") || "[]");
+    } catch {
+      return [];
+    }
   });
-  useEffect(() => { localStorage.setItem("newsBookmarks", JSON.stringify(bookmarks)); }, [bookmarks]);
+
+  useEffect(() => {
+    localStorage.setItem("newsBookmarks", JSON.stringify(bookmarks));
+  }, [bookmarks]);
 
   const loadNews = useCallback(async () => {
-    setIsLoading(true); setError(null);
-    try { setArticles(await fetchTopHeadlines()); }
-    catch (err) { setError(err.message || "Failed to load news."); }
-    finally { setIsLoading(false); }
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      setArticles(await fetchTopHeadlines());
+    } catch (err) {
+      setError(err.message || "Failed to load news.");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const loadTrending = useCallback(async (force=false) => {
-    if (trendingArticles.length > 0 && !force) return;
-    setIsTrendingLoading(true); setTrendingError(null);
-    try { setTrendingArticles(await fetchTrendingTopics()); }
-    catch (err) { setTrendingError(err.message || "Failed to load trending."); }
-    finally { setIsTrendingLoading(false); }
-  }, [trendingArticles.length]);
+  const loadTrending = useCallback(
+    async (force = false) => {
+      if (trendingArticles.length > 0 && !force) return;
 
-  useEffect(() => { loadNews().then(() => loadTrending()); }, []);
+      setIsTrendingLoading(true);
+      setTrendingError(null);
 
-  const allArticles = useMemo(() => Object.values(articles).flat(), [articles]);
+      try {
+        setTrendingArticles(await fetchTrendingTopics());
+      } catch (err) {
+        setTrendingError(err.message || "Failed to load trending.");
+      } finally {
+        setIsTrendingLoading(false);
+      }
+    },
+    [trendingArticles.length]
+  );
+
+useEffect(() => {
+  loadNews();
+}, [loadNews]);
+  const allArticles = useMemo(
+    () => Object.values(articles).flat(),
+    [articles]
+  );
 
   const filteredArticles = useMemo(() => {
     const result = {};
+
     SOURCE_CONFIG.forEach(({ id }) => {
       let list = articles[id] || [];
-      if (activeCategory !== "general") list = list.filter(a => a.category === activeCategory);
-      if (searchQuery) { const q = searchQuery.toLowerCase(); list = list.filter(a => a.title?.toLowerCase().includes(q) || a.description?.toLowerCase().includes(q)); }
+
+      if (activeCategory !== "general") {
+        list = list.filter((a) => a.category === activeCategory);
+      }
+
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+
+        list = list.filter(
+          (a) =>
+            a.title?.toLowerCase().includes(q) ||
+            a.description?.toLowerCase().includes(q)
+        );
+      }
+
       result[id] = list;
     });
+
     return result;
   }, [articles, activeCategory, searchQuery]);
 
   const toggleBookmark = useCallback((article) => {
-    setBookmarks(prev => prev.find(b => b.url === article.url) ? prev.filter(b => b.url !== article.url) : [...prev, article]);
+    setBookmarks((prev) =>
+      prev.find((b) => b.url === article.url)
+        ? prev.filter((b) => b.url !== article.url)
+        : [...prev, article]
+    );
   }, []);
-  const isBookmarked = useCallback((article) => bookmarks.some(b => b.url === article.url), [bookmarks]);
-  const getBias = useCallback((article) => calculateArticleBias(article, allArticles), [allArticles]);
 
-  const openDetail = useCallback((article, fromView="home") => {
-    setPreviousView(fromView); setSelectedArticle(article); setView("detail");
-    window.scrollTo({ top:0, behavior:"smooth" });
+  const isBookmarked = useCallback(
+    (article) => bookmarks.some((b) => b.url === article.url),
+    [bookmarks]
+  );
+
+  const getBias = useCallback(
+    (article) => calculateArticleBias(article, allArticles),
+    [allArticles]
+  );
+
+  const openDetail = useCallback((article, fromView = "home") => {
+    setPreviousView(fromView);
+    setSelectedArticle(article);
+    setView("detail");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }, []);
-  const closeDetail = useCallback(() => { setView(previousView); window.scrollTo({ top:0, behavior:"smooth" }); }, [previousView]);
 
-  const handleSearch = useCallback(() => { setSearchQuery(searchInput.trim()); setView("home"); setShowBookmarks(false); }, [searchInput]);
-  const handleCategoryClick = useCallback((cat) => { setActiveCategory(cat); setSearchQuery(""); setSearchInput(""); setView("home"); setShowBookmarks(false); }, []);
+  const closeDetail = useCallback(() => {
+    setView(previousView);
 
-  const NAV_ITEMS = ["general","technology","sports","business"];
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [previousView]);
+
+  const handleSearch = useCallback(() => {
+    setSearchQuery(searchInput.trim());
+    setView("home");
+    setShowBookmarks(false);
+  }, [searchInput]);
+
+  const handleCategoryClick = useCallback((cat) => {
+    setActiveCategory(cat);
+    setSearchQuery("");
+    setSearchInput("");
+    setView("home");
+    setShowBookmarks(false);
+  }, []);
+
+  const NAV_ITEMS = ["general", "technology", "sports", "business"];
 
   return (
-    <div style={{ minHeight:"100vh", background:"#0a0a0a" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0a0a0a",
+      }}
+    >
       <Masthead />
 
-      {/* Enhanced Navbar with Opinion + UserMenu */}
-      <nav style={{ background:"linear-gradient(180deg,#111111,#0d0d0d)", borderBottom:"1px solid rgba(200,151,58,0.25)", position:"sticky", top:0, zIndex:100, boxShadow:"0 4px 32px rgba(0,0,0,0.6)" }}>
-        <div style={{ maxWidth:"1280px", margin:"0 auto", padding:"0 24px" }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"12px", padding:"14px 0" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:"4px", flexWrap:"wrap" }}>
-              {NAV_ITEMS.map(cat => (
-                <button key={cat} onClick={() => handleCategoryClick(cat)}
-                  style={{ padding:"7px 16px", background: activeCategory===cat&&view==="home"?"rgba(200,151,58,0.15)":"transparent", border: activeCategory===cat&&view==="home"?"1px solid rgba(200,151,58,0.5)":"1px solid transparent", borderRadius:"3px", color: activeCategory===cat&&view==="home"?"#c8973a":"#9a9090", fontFamily:"'Courier New',monospace", fontSize:"11px", fontWeight:700, letterSpacing:"0.15em", textTransform:"uppercase", cursor:"pointer", transition:"all 0.2s" }}
-                  onMouseEnter={e=>{ if(!(activeCategory===cat&&view==="home")){ e.target.style.color="#c8973a"; }}}
-                  onMouseLeave={e=>{ if(!(activeCategory===cat&&view==="home")){ e.target.style.color="#9a9090"; }}}
-                >{cat}</button>
-              ))}
-              <div style={{ width:"1px",height:"24px",background:"rgba(200,151,58,0.2)",margin:"0 8px" }} />
-              <button onClick={()=>{ setView("opinion"); setShowBookmarks(false); }}
-                style={{ padding:"7px 16px", background: view==="opinion"?"rgba(200,151,58,0.15)":"transparent", border: view==="opinion"?"1px solid rgba(200,151,58,0.5)":"1px solid transparent", borderRadius:"3px", color: view==="opinion"?"#c8973a":"#9a9090", fontFamily:"'Courier New',monospace", fontSize:"11px", fontWeight:700, letterSpacing:"0.15em", textTransform:"uppercase", cursor:"pointer", transition:"all 0.2s" }}
-                onMouseEnter={e=>{ if(view!=="opinion") e.target.style.color="#c8973a"; }}
-                onMouseLeave={e=>{ if(view!=="opinion") e.target.style.color="#9a9090"; }}
-              >✍ Opinion</button>
-              <button onClick={()=>{ setView("trending"); setShowBookmarks(false); loadTrending(); }}
-                style={{ padding:"7px 16px",background:"transparent",border:"1px solid transparent",borderRadius:"3px",color:"#e8b85a",fontFamily:"'Courier New',monospace",fontSize:"11px",fontWeight:700,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",transition:"all 0.2s" }}
-                onMouseEnter={e=>e.currentTarget.style.background="rgba(232,184,90,0.1)"}
-                onMouseLeave={e=>e.currentTarget.style.background="transparent"}
-              >🔥 Trending</button>
-              <button onClick={()=>setShowBookmarks(true)}
-                style={{ padding:"7px 16px",background: bookmarks.length>0?"rgba(200,151,58,0.08)":"transparent",border: bookmarks.length>0?"1px solid rgba(200,151,58,0.3)":"1px solid transparent",borderRadius:"3px",color:"#c8973a",fontFamily:"'Courier New',monospace",fontSize:"11px",fontWeight:700,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",transition:"all 0.2s",display:"flex",alignItems:"center",gap:"8px" }}
-              >
-                📌 Bookmarks
-                <span style={{ background:"#c8973a",color:"#0a0a0a",fontSize:"10px",fontWeight:900,padding:"1px 7px",borderRadius:"10px",minWidth:"20px",textAlign:"center" }}>{bookmarks.length}</span>
-              </button>
-            </div>
-            <div style={{ display:"flex",alignItems:"center",gap:"12px" }}>
-              <input type="text" value={searchInput} onChange={e=>setSearchInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSearch()} placeholder="Search articles…"
-                style={{ width:"200px",padding:"8px 16px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(200,151,58,0.25)",borderRadius:"3px",color:"#faf6ef",fontFamily:"'Courier New',monospace",fontSize:"12px",outline:"none",transition:"all 0.2s" }}
-                onFocus={e=>{ e.target.style.border="1px solid rgba(200,151,58,0.6)"; e.target.style.background="rgba(200,151,58,0.05)"; }}
-                onBlur={e=>{ e.target.style.border="1px solid rgba(200,151,58,0.25)"; e.target.style.background="rgba(255,255,255,0.05)"; }}
-              />
-              <button onClick={handleSearch}
-                style={{ padding:"8px 20px",background:"linear-gradient(135deg,#c8973a,#e8b85a)",border:"none",borderRadius:"3px",color:"#0a0a0a",fontFamily:"'Courier New',monospace",fontSize:"11px",fontWeight:900,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",transition:"all 0.2s",boxShadow:"0 2px 12px rgba(200,151,58,0.3)" }}
-              >Search</button>
-              <UserMenu onShowAuth={() => setShowAuth(true)} />
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Navigation */}
+      {/* Navigation */}
+<nav className="site-navbar">
+  <div className="site-navbar-inner">
+    <div className="site-navbar-links">
 
-      <main style={{ maxWidth:"1280px", margin:"0 auto", padding:"40px 24px 80px" }}>
-        {showBookmarks && <BookmarksPanel bookmarks={bookmarks} onClose={()=>setShowBookmarks(false)} onOpenDetail={a=>openDetail(a,"home")} onToggleBookmark={toggleBookmark} isBookmarked={isBookmarked} getBias={getBias} />}
-        {view==="detail" && selectedArticle && <DetailPage article={selectedArticle} allArticles={allArticles} onBack={closeDetail} />}
-        {view==="trending" && <TrendingPage articles={trendingArticles} isLoading={isTrendingLoading} error={trendingError} onBack={()=>setView("home")} onRetry={()=>{ setTrendingArticles([]); loadTrending(true); }} onOpenDetail={a=>openDetail(a,"trending")} onToggleBookmark={toggleBookmark} isBookmarked={isBookmarked} />}
-        {view==="opinion" && <OpinionPage onShowAuth={()=>setShowAuth(true)} />}
-        {view==="home" && (
+      {NAV_ITEMS.map((cat) => (
+        <button
+          key={cat}
+          className="navbar-font"
+          onClick={() => handleCategoryClick(cat)}
+          style={{
+            padding: "7px 16px",
+            background:
+              activeCategory === cat && view === "home"
+                ? "rgba(167,122,53,0.07)"
+                : "transparent",
+            border:
+              activeCategory === cat && view === "home"
+                ? "1px solid rgba(167,122,53,0.38)"
+                : "1px solid transparent",
+            borderRadius: "2px",
+            color:
+              activeCategory === cat && view === "home"
+                ? "#8f672d"
+                : "#29251f",
+            fontFamily:
+              '"Cormorant Garamond", Georgia, serif',
+            fontSize: "14px",
+            fontWeight: 600,
+            letterSpacing: "0.09em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            whiteSpace: "nowrap",
+          }}
+          onMouseEnter={(e) => {
+            if (!(activeCategory === cat && view === "home")) {
+              e.currentTarget.style.color = "#8f672d";
+              e.currentTarget.style.background =
+                "rgba(167,122,53,0.045)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!(activeCategory === cat && view === "home")) {
+              e.currentTarget.style.color = "#29251f";
+              e.currentTarget.style.background = "transparent";
+            }
+          }}
+        >
+          {cat}
+        </button>
+      ))}
+
+      <span className="navbar-divider" />
+
+      {/* Opinion */}
+      <button
+        className="navbar-font"
+        onClick={() => {
+          setView("opinion");
+          setShowBookmarks(false);
+        }}
+        style={{
+          padding: "7px 16px",
+          background:
+            view === "opinion"
+              ? "rgba(167,122,53,0.07)"
+              : "transparent",
+          border:
+            view === "opinion"
+              ? "1px solid rgba(167,122,53,0.38)"
+              : "1px solid transparent",
+          borderRadius: "2px",
+          color:
+            view === "opinion"
+              ? "#8f672d"
+              : "#29251f",
+          fontFamily:
+            '"Cormorant Garamond", Georgia, serif',
+          fontSize: "14px",
+          fontWeight: 600,
+          letterSpacing: "0.09em",
+          textTransform: "uppercase",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          whiteSpace: "nowrap",
+        }}
+      >
+        ✍ Opinion
+      </button>
+
+      {/* Trending */}
+      <button
+        className="navbar-font"
+        onClick={() => {
+          setView("trending");
+          setShowBookmarks(false);
+          loadTrending();
+        }}
+        style={{
+          padding: "7px 16px",
+          background:
+            view === "trending"
+              ? "rgba(167,122,53,0.07)"
+              : "transparent",
+          border:
+            view === "trending"
+              ? "1px solid rgba(167,122,53,0.38)"
+              : "1px solid transparent",
+          borderRadius: "2px",
+          color:
+            view === "trending"
+              ? "#8f672d"
+              : "#29251f",
+          fontFamily:
+            '"Cormorant Garamond", Georgia, serif',
+          fontSize: "14px",
+          fontWeight: 600,
+          letterSpacing: "0.09em",
+          textTransform: "uppercase",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          whiteSpace: "nowrap",
+        }}
+      >
+        🔥 Trending
+      </button>
+
+      {/* Bookmarks */}
+      <button
+        className="navbar-font"
+        onClick={() => setShowBookmarks(true)}
+        style={{
+          padding: "7px 15px",
+          background:
+            showBookmarks || bookmarks.length > 0
+              ? "rgba(167,122,53,0.07)"
+              : "transparent",
+          border:
+            showBookmarks || bookmarks.length > 0
+              ? "1px solid rgba(167,122,53,0.38)"
+              : "1px solid transparent",
+          borderRadius: "2px",
+          color:
+            showBookmarks || bookmarks.length > 0
+              ? "#8f672d"
+              : "#29251f",
+          fontFamily:
+            '"Cormorant Garamond", Georgia, serif',
+          fontSize: "14px",
+          fontWeight: 600,
+          letterSpacing: "0.09em",
+          textTransform: "uppercase",
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+          whiteSpace: "nowrap",
+          display: "flex",
+          alignItems: "center",
+          gap: "7px",
+        }}
+      >
+        <span>📌</span>
+
+        <span style={{ color: "inherit" }}>
+          Bookmarks
+        </span>
+
+        <span className="bookmark-count">
+          {bookmarks.length}
+        </span>
+      </button>
+    </div>
+
+    {/* Search + User */}
+    <div className="site-navbar-search">
+
+      <input
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
+        placeholder="Search articles..."
+        aria-label="Search articles"
+      />
+
+      <button
+        className="search-button"
+        onClick={handleSearch}
+      >
+        Search
+      </button>
+
+      <UserMenu
+        onShowAuth={() => setShowAuth(true)}
+      />
+    </div>
+  </div>
+</nav>
+
+      <main
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "40px 24px 80px",
+        }}
+      >
+        {showBookmarks && (
+          <BookmarksPanel
+            bookmarks={bookmarks}
+            onClose={() => setShowBookmarks(false)}
+            onOpenDetail={(a) => openDetail(a, "home")}
+            onToggleBookmark={toggleBookmark}
+            isBookmarked={isBookmarked}
+            getBias={getBias}
+          />
+        )}
+
+        {view === "detail" && selectedArticle && (
+          <DetailPage
+            article={selectedArticle}
+            allArticles={allArticles}
+            onBack={closeDetail}
+          />
+        )}
+
+        {view === "trending" && (
+          <TrendingPage
+            articles={trendingArticles}
+            isLoading={isTrendingLoading}
+            error={trendingError}
+            onBack={() => setView("home")}
+            onRetry={() => {
+              setTrendingArticles([]);
+              loadTrending(true);
+            }}
+            onOpenDetail={(a) => openDetail(a, "trending")}
+            onToggleBookmark={toggleBookmark}
+            isBookmarked={isBookmarked}
+          />
+        )}
+
+        {view === "opinion" && (
+          <OpinionPage
+            onShowAuth={() => setShowAuth(true)}
+          />
+        )}
+
+        {view === "home" && (
           <>
             {isLoading && <LoadingState />}
-            {error && !isLoading && <ErrorState message={error} onRetry={loadNews} />}
-            {!isLoading && !error && <NewsColumns sources={SOURCE_CONFIG} articles={filteredArticles} allArticles={allArticles} onCardClick={a=>openDetail(a,"home")} onToggleBookmark={toggleBookmark} isBookmarked={isBookmarked} getBias={getBias} />}
+
+            {error && !isLoading && (
+              <ErrorState
+                message={error}
+                onRetry={loadNews}
+              />
+            )}
+
+            {!isLoading && !error && (
+              <NewsColumns
+                sources={SOURCE_CONFIG}
+                articles={filteredArticles}
+                allArticles={allArticles}
+                onCardClick={(a) => openDetail(a, "home")}
+                onToggleBookmark={toggleBookmark}
+                isBookmarked={isBookmarked}
+                getBias={getBias}
+              />
+            )}
           </>
         )}
       </main>
 
-      {showAuth && <AuthModal onClose={()=>setShowAuth(false)} />}
+      {showAuth && (
+        <AuthModal onClose={() => setShowAuth(false)} />
+      )}
     </div>
   );
 }

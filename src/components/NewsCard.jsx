@@ -1,109 +1,298 @@
-export default function NewsCard({ article, onCardClick, onToggleBookmark, isBookmarked, getBias }) {
+export default function NewsCard({
+  article,
+  onCardClick,
+  onToggleBookmark,
+  isBookmarked,
+  getBias,
+}) {
   const saved = isBookmarked(article);
-  const bias = getBias ? getBias(article) : { left: 0, center: 100, right: 0, label: "Single source" };
-  const formatDate = (iso) => { try { return new Date(iso).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}); } catch{ return ""; } };
+
+  const bias = getBias
+    ? getBias(article)
+    : {
+        left: 0,
+        center: 100,
+        right: 0,
+        label: "Single source",
+      };
+
+  const formatDate = (iso) => {
+    try {
+      return new Date(iso).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return "";
+    }
+  };
 
   return (
     <article
-      onClick={e => { if(!e.target.closest(".bm-btn")) onCardClick(article); }}
+      className="news-card"
+      onClick={(e) => {
+        if (!e.target.closest(".bm-btn")) {
+          onCardClick(article);
+        }
+      }}
       style={{
-        background:"linear-gradient(160deg,#1a1a1a 0%,#141414 100%)",
-        border:"1px solid rgba(200,151,58,0.12)",
-        borderRadius:"4px",
-        overflow:"hidden",
-        cursor:"pointer",
-        transition:"all 0.35s cubic-bezier(0.165,0.84,0.44,1)",
-        boxShadow:"0 4px 24px rgba(0,0,0,0.4)",
-        animation:"fadeUp 0.5s ease forwards",
+        overflow: "hidden",
+        cursor: "pointer",
+        transition:
+          "transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+        animation: "fadeUp 0.5s ease forwards",
       }}
-      onMouseEnter={e=>{
-        e.currentTarget.style.transform="translateY(-6px)";
-        e.currentTarget.style.boxShadow="0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,151,58,0.25)";
-        e.currentTarget.style.borderColor="rgba(200,151,58,0.3)";
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow =
+          "0 8px 22px rgba(60,40,10,0.12)";
+        e.currentTarget.style.borderColor =
+          "rgba(130,95,42,0.5)";
       }}
-      onMouseLeave={e=>{
-        e.currentTarget.style.transform="";
-        e.currentTarget.style.boxShadow="0 4px 24px rgba(0,0,0,0.4)";
-        e.currentTarget.style.borderColor="rgba(200,151,58,0.12)";
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "";
+        e.currentTarget.style.boxShadow =
+          "0 2px 8px rgba(60,40,10,0.06)";
+        e.currentTarget.style.borderColor =
+          "rgba(130,95,42,0.28)";
       }}
     >
-      {/* Image */}
-      <div style={{ position:"relative", overflow:"hidden", height:"190px" }}>
-        <img
-          src={article.urlToImage || `https://picsum.photos/seed/${article.id}/400/220`}
-          alt={article.title}
-          style={{ width:"100%", height:"100%", objectFit:"cover", transition:"transform 0.6s ease", display:"block" }}
-          onError={e=>{ e.target.src=`https://picsum.photos/seed/${Math.random()}/400/220`; }}
-          onMouseEnter={e=>e.target.style.transform="scale(1.06)"}
-          onMouseLeave={e=>e.target.style.transform=""}
-        />
-        {/* Dark overlay gradient */}
-        <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%)" }} />
+      {/* =====================================================
+          IMAGE
+      ===================================================== */}
 
-        {/* Category badge */}
+      <div
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          height: "190px",
+          background: "#e9e1d2",
+        }}
+      >
+        <img
+          src={
+            article.urlToImage ||
+            `https://picsum.photos/seed/${article.id}/400/220`
+          }
+          alt={article.title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.6s ease",
+            display: "block",
+          }}
+          onError={(e) => {
+            e.target.src = `https://picsum.photos/seed/${Math.random()}/400/220`;
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.04)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "";
+          }}
+        />
+
+        {/* Very subtle image overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.12) 0%, transparent 50%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* =================================================
+            CATEGORY
+        ================================================= */}
+
         {article.category && (
-          <span style={{
-            position:"absolute", top:"12px", left:"12px",
-            background:"rgba(10,10,10,0.85)", backdropFilter:"blur(8px)",
-            border:"1px solid rgba(200,151,58,0.4)",
-            color:"#c8973a", fontSize:"9px", fontWeight:700,
-            fontFamily:"'Courier New',monospace",
-            letterSpacing:"0.2em", textTransform:"uppercase",
-            padding:"4px 10px", borderRadius:"2px",
-          }}>{article.category}</span>
+          <span
+            className="category-badge"
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "12px",
+              background: "rgba(25,21,16,0.88)",
+              color: "#d3ad6b",
+              border:
+                "1px solid rgba(199,166,106,0.45)",
+              padding: "4px 9px",
+              borderRadius: "2px",
+            }}
+          >
+            {article.category}
+          </span>
         )}
 
-        {/* Bookmark btn */}
-        <button className="bm-btn"
-          onClick={e=>{ e.stopPropagation(); onToggleBookmark(article); }}
-          style={{
-            position:"absolute", top:"10px", right:"10px",
-            width:"34px", height:"34px",
-            background: saved ? "rgba(200,151,58,0.9)" : "rgba(10,10,10,0.75)",
-            backdropFilter:"blur(8px)",
-            border: saved ? "1px solid #c8973a" : "1px solid rgba(200,151,58,0.3)",
-            borderRadius:"50%", cursor:"pointer",
-            fontSize:"14px", display:"flex", alignItems:"center", justifyContent:"center",
-            transition:"all 0.25s", boxShadow: saved ? "0 0 12px rgba(200,151,58,0.4)" : "none",
-            animation: saved ? "goldPulse 1s ease" : "none",
+        {/* =================================================
+            BOOKMARK
+        ================================================= */}
+
+        <button
+          className="bm-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleBookmark(article);
           }}
-          onMouseEnter={e=>{ e.currentTarget.style.transform="scale(1.1)"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.transform=""; }}
-        >{saved ? "★" : "☆"}</button>
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            width: "34px",
+            height: "34px",
+
+            background: saved
+              ? "rgba(167,122,53,0.9)"
+              : "rgba(25,21,16,0.72)",
+
+            backdropFilter: "blur(5px)",
+
+            border: saved
+              ? "1px solid #a77a35"
+              : "1px solid rgba(199,166,106,0.4)",
+
+            borderRadius: "50%",
+            cursor: "pointer",
+
+            color: saved ? "#fff8e8" : "#d3ad6b",
+
+            fontSize: "15px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
+            transition: "all 0.25s",
+
+            boxShadow: saved
+              ? "0 0 12px rgba(167,122,53,0.25)"
+              : "none",
+
+            animation: saved
+              ? "goldPulse 1s ease"
+              : "none",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.08)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "";
+          }}
+        >
+          {saved ? "★" : "☆"}
+        </button>
       </div>
 
-      {/* Content */}
-      <div style={{ padding:"18px 18px 16px" }}>
-        <h3 style={{
-          fontFamily:"'Libre Baskerville',Georgia,serif",
-          fontSize:"1.05rem", fontWeight:700, lineHeight:1.4,
-          color:"#faf6ef", marginBottom:"8px",
-          display:"-webkit-box", WebkitLineClamp:2,
-          WebkitBoxOrient:"vertical", overflow:"hidden",
-        }}>
-          {article.title?.length > 90 ? article.title.substring(0,90)+"…" : article.title}
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
+
+      <div
+        style={{
+          padding: "18px 18px 16px",
+        }}
+      >
+        {/* Article title */}
+        <h3
+          className="news-card-title"
+          style={{
+            marginBottom: "8px",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {article.title?.length > 90
+            ? article.title.substring(0, 90) + "…"
+            : article.title}
         </h3>
 
-        <p style={{ fontSize:"11px", color:"#6b6560", fontFamily:"'Courier New',monospace", letterSpacing:"0.05em", marginBottom:"10px" }}>
-          {article.source?.name} &nbsp;·&nbsp; {formatDate(article.publishedAt)}
+        {/* Source / Date */}
+        <p
+          className="news-card-meta"
+          style={{
+            marginBottom: "11px",
+          }}
+        >
+          {article.source?.name}
+          &nbsp; · &nbsp;
+          {formatDate(article.publishedAt)}
         </p>
 
-        <p style={{
-          fontSize:"0.88rem", color:"#9a9090", lineHeight:1.6,
-          display:"-webkit-box", WebkitLineClamp:3, WebkitBoxOrient:"vertical", overflow:"hidden",
-          marginBottom:"14px",
-        }}>
-          {article.description || "No description available."}
+        {/* Description */}
+        <p
+          className="news-card-description"
+          style={{
+            marginBottom: "15px",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {article.description ||
+            "No description available."}
         </p>
 
-        {/* Bias bar */}
-        <div style={{ borderTop:"1px solid rgba(200,151,58,0.1)", paddingTop:"12px" }}>
-          <div style={{ display:"flex", height:"3px", borderRadius:"2px", overflow:"hidden", marginBottom:"6px", background:"#252525" }}>
-            <div style={{ width:`${bias.left}%`, background:"linear-gradient(90deg,#3b7dd8,#2563eb)", transition:"width 0.8s" }} />
-            <div style={{ width:`${bias.center}%`, background:"linear-gradient(90deg,#2da87a,#059669)", transition:"width 0.8s" }} />
-            <div style={{ width:`${bias.right}%`, background:"linear-gradient(90deg,#d84f3b,#dc2626)", transition:"width 0.8s" }} />
+        {/* =================================================
+            BIAS BAR
+        ================================================= */}
+
+        <div
+          style={{
+            borderTop:
+              "1px solid rgba(130,95,42,0.15)",
+            paddingTop: "12px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              height: "3px",
+              borderRadius: "2px",
+              overflow: "hidden",
+              marginBottom: "6px",
+              background: "#ded5c5",
+            }}
+          >
+            <div
+              className="bias-bar-segment-left"
+              style={{
+                width: `${bias.left}%`,
+                transition: "width 0.8s",
+              }}
+            />
+
+            <div
+              className="bias-bar-segment-center"
+              style={{
+                width: `${bias.center}%`,
+                transition: "width 0.8s",
+              }}
+            />
+
+            <div
+              className="bias-bar-segment-right"
+              style={{
+                width: `${bias.right}%`,
+                transition: "width 0.8s",
+              }}
+            />
           </div>
-          <p style={{ fontSize:"10px", color:"#6b6560", fontFamily:"'Courier New',monospace", letterSpacing:"0.05em" }}>
+
+          <p
+            style={{
+              fontFamily:
+                '"IBM Plex Mono", "Courier New", monospace',
+              fontSize: "8px",
+              letterSpacing: "0.07em",
+              color: "#807668",
+            }}
+          >
             ◆ {bias.label}
           </p>
         </div>

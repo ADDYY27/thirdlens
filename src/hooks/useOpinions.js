@@ -10,40 +10,79 @@ import { db } from "../firebase";
 export function useOpinions() {
   const [opinions, setOpinions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const q = query(collection(db, "opinions"), orderBy("createdAt", "desc"));
-    const unsub = onSnapshot(q, (snap) => {
-      setOpinions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setLoading(false);
-    });
-    return unsub;
+    setLoading(true);
+    setError(null);
+
+    const q = query(
+      collection(db, "opinions"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const data = snap.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        }));
+
+        setOpinions(data);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Opinions Firestore error:", err);
+
+        setError(err);
+        setOpinions([]);
+        setLoading(false);
+      }
+    );
+
+    return () => unsub();
   }, []);
 
   async function publishOpinion(data) {
-    return addDoc(collection(db, "opinions"), {
-      ...data,
-      likes: [],
-      commentsCount: 0,
-      createdAt: serverTimestamp(),
-    });
+    try {
+      return await addDoc(collection(db, "opinions"), {
+        ...data,
+        likes: [],
+        commentsCount: 0,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error("Publish opinion error:", err);
+      throw err;
+    }
   }
 
   async function toggleLike(opinionId, uid) {
     const ref = doc(db, "opinions", opinionId);
-    const opinion = opinions.find(o => o.id === opinionId);
+    const opinion = opinions.find((o) => o.id === opinionId);
+
     const liked = opinion?.likes?.includes(uid);
-    await updateDoc(ref, { likes: liked ? arrayRemove(uid) : arrayUnion(uid) });
+
+    await updateDoc(ref, {
+      likes: liked ? arrayRemove(uid) : arrayUnion(uid),
+    });
   }
 
-  return { opinions, loading, publishOpinion, toggleLike };
+  return {
+    opinions,
+    loading,
+    error,
+    publishOpinion,
+    toggleLike,
+  };
 }
 
 // ── Comments ──────────────────────────────────────────────────────────────────
 export function useComments(opinionId) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     if (!opinionId) return;
     const q = query(

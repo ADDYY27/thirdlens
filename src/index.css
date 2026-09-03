@@ -1,65 +1,551 @@
-*, *::before, *::after {
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap');
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 :root {
-  --ink: #0a0a0a;
-  --ink-2: #111111;
-  --ink-3: #1a1a1a;
-  --ink-4: #252525;
-  --gold: #c8973a;
-  --gold-light: #e8b85a;
-  --gold-pale: #f5e6c8;
-  --cream: #faf6ef;
-  --cream-2: #f0e8d8;
-  --muted: #6b6560;
-  --muted-2: #9a9090;
-  --left-color: #3b7dd8;
-  --center-color: #2da87a;
-  --right-color: #d84f3b;
-  --shadow-gold: 0 0 30px rgba(200,151,58,0.15);
-  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-  --shadow-hover: 0 12px 48px rgba(0,0,0,0.6);
+  /* PAPER */
+  --paper: #f4efe4;
+  --paper-light: #faf7ef;
+  --paper-card: #f8f3e8;
+  --paper-dark: #e9e1d0;
+
+  /* INK */
+  --ink: #171512;
+  --ink-soft: #302b25;
+  --ink-muted: #665e52;
+  --ink-faint: #8a7f6e;
+
+  /* GOLD */
+  --gold: #a77a35;
+  --gold-dark: #8d652c;
+  --gold-light: #c4a064;
+  --gold-faint: rgba(167, 122, 53, 0.18);
+
+  /* SOURCE COLORS */
+  --left-color: #5d91c5;
+  --center-color: #5eaf82;
+  --right-color: #e98b4d;
+
+  /* BORDERS */
+  --border: rgba(130, 95, 42, 0.30);
+  --border-light: rgba(130, 95, 42, 0.18);
+
+  /* SHADOWS */
+  --shadow-card: 0 2px 8px rgba(60, 40, 10, 0.07);
+  --shadow-hover: 0 8px 22px rgba(60, 40, 10, 0.12);
 }
 
-html { scroll-behavior: smooth; }
+/* =========================================================
+   BASE
+========================================================= */
+
+html {
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
 
 body {
-  font-family: 'Crimson Pro', 'Palatino Linotype', Georgia, serif;
-  background: var(--ink);
-  color: var(--cream);
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(120, 90, 40, 0.025),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(120, 90, 40, 0.02),
+      transparent 40%
+    ),
+    var(--paper) !important;
+
+  color: var(--ink) !important;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--ink-2); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+/* subtle paper texture */
 
-/* ── Animations ── */
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+
+  opacity: 0.16;
+
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(80, 50, 20, 0.018) 0px,
+      rgba(80, 50, 20, 0.018) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  mix-blend-mode: multiply;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 3px;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+.masthead-title {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.editorial-heading {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+}
+
+.article-title {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+}
+
+.editorial-body {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+.mono {
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
+}
+
+/* =========================================================
+   MASTHEAD
+========================================================= */
+
+header {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,255,255,0.45),
+      transparent 65%
+    ),
+    var(--paper) !important;
+
+  color: var(--ink) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+header h1 {
+  font-family: "Playfair Display", Georgia, serif !important;
+  color: var(--ink) !important;
+
+  /* IMPORTANT:
+     removes the old gold text treatment */
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  background-clip: initial !important;
+
+  font-weight: 600 !important;
+}
+
+header p {
+  color: var(--gold-dark) !important;
+}
+
+header hr {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167,122,53,0.45),
+    transparent
+  ) !important;
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+nav {
+  background:
+    rgba(250, 247, 239, 0.96) !important;
+
+  color: var(--ink) !important;
+
+  border-bottom: 1px solid var(--border) !important;
+
+  box-shadow: none !important;
+}
+
+nav button {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-weight: 600 !important;
+
+  color: var(--ink-soft) !important;
+
+  background: transparent !important;
+}
+
+nav button:hover {
+  color: var(--gold-dark) !important;
+}
+
+nav input {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+
+  background: rgba(255,255,255,0.28) !important;
+
+  color: var(--ink) !important;
+
+  border: 1px solid var(--border) !important;
+}
+
+nav input::placeholder {
+  color: var(--ink-faint) !important;
+}
+
+nav input:focus {
+  border-color: var(--gold) !important;
+  background: rgba(255,255,255,0.55) !important;
+}
+
+nav button[class*="navbar-font"] {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+/* Search button */
+
+
+
+/* =========================================================
+   SOURCE HEADINGS
+========================================================= */
+
+.source-heading {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-size: 29px;
+  font-weight: 600;
+  line-height: 1.1;
+
+  color: var(--ink) !important;
+}
+
+.source-meta {
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: var(--ink-faint) !important;
+}
+
+/* =========================================================
+   BREAKING NEWS
+========================================================= */
+
+.breaking-card {
+  background: rgba(255,255,255,0.28) !important;
+
+  border: 1px solid var(--border) !important;
+  border-left: 3px solid var(--gold) !important;
+
+  border-radius: 3px !important;
+
+  box-shadow: none !important;
+}
+
+.breaking-label {
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: var(--gold-dark) !important;
+}
+
+.breaking-item {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-size: 16px;
+  font-weight: 500;
+
+  line-height: 1.25;
+
+  color: var(--ink-soft) !important;
+}
+
+/* =========================================================
+   NEWS CARDS
+========================================================= */
+
+.news-card {
+  background: var(--paper-card) !important;
+
+  border: 1px solid var(--border) !important;
+
+  border-radius: 3px !important;
+
+  box-shadow: var(--shadow-card) !important;
+}
+
+.news-card:hover {
+  box-shadow: var(--shadow-hover) !important;
+}
+
+.news-card-title {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+
+  font-size: 23px;
+  font-weight: 600;
+
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+
+  color: var(--ink) !important;
+}
+
+.news-card-description {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+
+  font-size: 16px;
+  font-weight: 400;
+
+  line-height: 1.35;
+
+  color: var(--ink-muted) !important;
+}
+
+.news-card-meta {
+  font-family: "IBM Plex Mono", monospace !important;
+
+  font-size: 9px;
+  font-weight: 400;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: var(--ink-faint) !important;
+}
+
+/* =========================================================
+   CATEGORY BADGES
+========================================================= */
+
+.category-badge {
+  font-family: "IBM Plex Mono", monospace !important;
+
+  font-size: 8px;
+  font-weight: 600;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   ARTICLE ELEMENTS
+========================================================= */
+
+/* This catches NewsCard even if inline styles exist */
+
+article {
+  background: var(--paper-card) !important;
+
+  border-color: var(--border) !important;
+
+  box-shadow: var(--shadow-card) !important;
+
+  color: var(--ink) !important;
+}
+
+article h3 {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+
+  color: var(--ink) !important;
+
+  font-weight: 600 !important;
+}
+
+article p {
+  color: var(--ink-muted);
+}
+
+article img {
+  display: block;
+}
+
+/* category badge inside article */
+
+article span {
+  font-family: "IBM Plex Mono", monospace !important;
+}
+
+/* =========================================================
+   BIAS BAR
+========================================================= */
+
+.bias-bar-segment-left {
+  background: linear-gradient(
+    135deg,
+    #5d91c5,
+    #477daf
+  ) !important;
+}
+
+.bias-bar-segment-center {
+  background: linear-gradient(
+    135deg,
+    #5eaf82,
+    #47966c
+  ) !important;
+}
+
+.bias-bar-segment-right {
+  background: linear-gradient(
+    135deg,
+    #e98b4d,
+    #d87335
+  ) !important;
+}
+
+/* =========================================================
+   GOLD RULES
+========================================================= */
+
+.gold-rule {
+  border: none;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167,122,53,0.45),
+    transparent
+  );
+}
+
+.gold-rule-double {
+  border: none;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167,122,53,0.5),
+    transparent
+  );
+
+  position: relative;
+}
+
+.gold-rule-double::after {
+  content: "";
+
+  position: absolute;
+
+  top: 5px;
+  left: 0;
+  right: 0;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167,122,53,0.2),
+    transparent
+  );
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
 @keyframes fadeUp {
-  from { opacity:0; transform:translateY(24px); }
-  to   { opacity:1; transform:translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
+
 @keyframes goldPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(200,151,58,0.4); }
-  50%     { box-shadow: 0 0 0 8px rgba(200,151,58,0); }
+  0%,100% {
+    box-shadow: 0 0 0 0 rgba(167,122,53,0.25);
+  }
+
+  50% {
+    box-shadow: 0 0 0 7px rgba(167,122,53,0);
+  }
 }
 
-.animate-spin  { animation: spin  1s linear infinite; }
-.animate-pulse { animation: pulse 1.5s ease-in-out infinite; }
-.fade-up       { animation: fadeUp 0.5s ease forwards; }
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
 
-/* ── Line clamps ── */
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.fade-up {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+/* =========================================================
+   LINE CLAMPS
+========================================================= */
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -67,6 +553,7 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -75,59 +562,200 @@ body {
   overflow: hidden;
 }
 
-/* ── Gold shimmer text ── */
-.gold-shimmer {
-  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 30%, #fff8e7 50%, var(--gold-light) 70%, var(--gold) 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s linear infinite;
-}
+/* =========================================================
+   GRIDS
+========================================================= */
 
-/* ── Dividers ── */
-.gold-rule {
-  border: none;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-.gold-rule-double {
-  border: none;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  position: relative;
-}
-.gold-rule-double::after {
-  content:'';
-  position:absolute;
-  top:5px; left:0; right:0;
-  height:1px;
-  background: linear-gradient(90deg, transparent, rgba(200,151,58,0.4), transparent);
-}
-
-/* ── Bias bar base ── */
-.bias-bar-segment-left   { background: linear-gradient(135deg,#3b7dd8,#2563eb); }
-.bias-bar-segment-center { background: linear-gradient(135deg,#2da87a,#059669); }
-.bias-bar-segment-right  { background: linear-gradient(135deg,#d84f3b,#dc2626); }
-
-/* ── Responsive columns ── */
 .news-col-grid {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
+
   gap: 28px;
 }
-@media (max-width: 1024px) {
-  .news-col-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 680px) {
-  .news-col-grid { grid-template-columns: 1fr; }
-}
 
-/* ── Trending grid ── */
 .trending-grid {
   display: flex;
+
   flex-direction: column;
+
   gap: 36px;
+
   max-width: 960px;
+
   margin: 0 auto;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+main {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1024px) {
+
+  .news-col-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+@media (max-width: 680px) {
+
+  .news-col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .masthead-title {
+    font-size: 52px;
+  }
+
+  .source-heading {
+    font-size: 26px;
+  }
+
+  .news-card-title {
+    font-size: 21px;
+  }
+
+}
+/* =========================================================
+   PAPER THEME — FORCE CORRECT TEXT COLORS
+========================================================= */
+
+/* Navbar text */
+.navbar-font {
+  color: var(--ink-soft) !important;
+}
+
+/* Active navbar item */
+.navbar-font:focus,
+.navbar-font:hover {
+  color: var(--gold-dark) !important;
+}
+
+/* Source headings — The Hindu / Indian Express / Times of India */
+.source-heading {
+  color: var(--ink) !important;
+}
+
+/* Source metadata */
+.source-meta {
+  color: var(--ink-faint) !important;
+}
+
+/* Breaking news text */
+.breaking-item {
+  color: var(--ink-soft) !important;
+}
+
+.breaking-label {
+  color: var(--gold-dark) !important;
+}
+
+/* News card text */
+.news-card-title {
+  color: var(--ink) !important;
+}
+
+.news-card-description {
+  color: var(--ink-muted) !important;
+}
+
+.news-card-meta {
+  color: var(--ink-faint) !important;
+}
+
+/* Search placeholder/text */
+input::placeholder {
+  color: var(--ink-faint) !important;
+  opacity: 1;
+}
+
+/* Search + navbar buttons */
+nav button {
+  color: var(--ink-soft);
+}
+
+/* Don't allow white text on paper navbar */
+nav .navbar-font {
+  color: var(--ink-soft) !important;
+}
+
+nav .navbar-font {
+  color: #29251f !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+/* FORCE NAVBAR TEXT TO DARK INK */
+nav button.navbar-font,
+nav button.navbar-font span {
+  color: #29251f !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+/* Keep bookmark count white */
+nav button.navbar-font span[style*="background"] {
+  color: #fffaf0 !important;
+  font-family: "IBM Plex Mono", monospace !important;
+}
+
+/* Active bookmark */
+nav button.navbar-font[style*="rgba(167,122,53"] {
+  color: #8f672d !important;
+}
+
+/* ================================
+   NAVBAR - FORCE DARK TEXT
+================================ */
+
+.navbar-font,
+.navbar-font span {
+  color: #29251f !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+/* Keep bookmark count white */
+.navbar-font span[style*="background"] {
+  color: #fffaf0 !important;
+  font-family: "IBM Plex Mono", monospace !important;
+}
+
+/* =========================================================
+   FINAL NAVBAR TEXT FIX
+========================================================= */
+
+.site-navbar .navbar-font {
+  color: #29251f !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+}
+
+.site-navbar .navbar-font:hover {
+  color: #8f672d !important;
+}
+
+.site-navbar .bookmark-count {
+  color: #fffaf0 !important;
+  font-family: "IBM Plex Mono", monospace !important;
+}
+
+/* =========================================================
+   USER MENU — PAPER THEME
+========================================================= */
+
+.user-menu-button {
+  color: #29251f !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  background: transparent !important;
+}
+
+.user-menu-button:hover {
+  color: #8f672d !important;
 }

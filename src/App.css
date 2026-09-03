@@ -42,3 +42,11 @@
 .read-the-docs {
   color: #888;
 }
+
+nav .navbar-font {
+  color: #29251f !important;
+}
+
+nav .navbar-font:hover {
+  color: #8f672d !important;
+}

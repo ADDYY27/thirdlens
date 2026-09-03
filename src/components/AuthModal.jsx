@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 export default function AuthModal({ onClose }) {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
@@ -30,35 +31,134 @@ export default function AuthModal({ onClose }) {
   const onBlur  = e => { e.target.style.border="1px solid rgba(200,151,58,0.2)"; e.target.style.background="rgba(255,255,255,0.04)"; };
 
   async function handleSubmit() {
-    setError(""); setLoading(true);
-    try {
-      if (mode === "login") await login(form.email, form.password);
-      else {
-        if (!form.name.trim()) { setError("Please enter your name."); setLoading(false); return; }
-        await signup(form.email, form.password, form.name.trim());
-      }
-      onClose();
-    } catch (err) {
-      const msgs = {
-        "auth/invalid-email": "Invalid email address.",
-        "auth/wrong-password": "Incorrect password. Use 'Forgot password?' below.",
-        "auth/invalid-credential": "Wrong email or password. Try again or reset your password.",
-        "auth/user-not-found": "No account found. Please create one.",
-        "auth/email-already-in-use": "Email already registered. Try signing in instead.",
-        "auth/weak-password": "Password must be at least 6 characters.",
-        "auth/too-many-requests": "Too many attempts. Please wait a moment.",
-      };
-      setError(msgs[err.code] || err.message);
-    }
-    setLoading(false);
+  if (loading) return;
+
+  setError("");
+
+  const email = form.email.trim();
+  const password = form.password;
+
+  if (!email) {
+    setError("Please enter your email address.");
+    return;
   }
 
-  async function handleGoogle() {
-    setError(""); setLoading(true);
-    try { await loginWithGoogle(); onClose(); }
-    catch (err) { setError("Google sign-in failed. Try again."); }
+  if (!email.includes("@")) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  if (!password) {
+    setError("Please enter your password.");
+    return;
+  }
+
+  if (mode === "signup") {
+    if (!form.name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+  }
+
+  setLoading(true);
+
+  try {
+    if (mode === "login") {
+      await login(email, password);
+    } else {
+      await signup(email, password, form.name.trim());
+    }
+
+    onClose();
+  } catch (err) {
+    console.error("Authentication error:", err);
+
+    const messages = {
+      "auth/invalid-email":
+        "That email address doesn't look valid.",
+
+      "auth/user-not-found":
+        "No account exists with this email.",
+
+      "auth/wrong-password":
+        "Incorrect password. Try again or reset it.",
+
+      "auth/invalid-credential":
+        "Email or password is incorrect.",
+
+      "auth/email-already-in-use":
+        "An account already exists with this email. Sign in instead.",
+
+      "auth/weak-password":
+        "Password must contain at least 6 characters.",
+
+      "auth/too-many-requests":
+        "Too many attempts. Please wait a little and try again.",
+
+      "auth/network-request-failed":
+        "Network error. Check your internet connection.",
+
+      "auth/popup-closed-by-user":
+        "Google sign-in was cancelled.",
+
+      "auth/popup-blocked":
+        "Your browser blocked the Google sign-in popup.",
+
+      "auth/operation-not-allowed":
+        "This sign-in method is not enabled in Firebase.",
+
+      "auth/account-exists-with-different-credential":
+        "This email already uses another sign-in method.",
+    };
+
+    setError(
+      messages[err?.code] ||
+      "Something went wrong. Please try again."
+    );
+  } finally {
     setLoading(false);
   }
+}
+ async function handleGoogle() {
+  setError("");
+  setLoading(true);
+
+  try {
+    await loginWithGoogle();
+    onClose();
+  } catch (err) {
+    console.error("Google authentication error:", err);
+
+    const messages = {
+      "auth/popup-closed-by-user":
+        "Google sign-in was cancelled.",
+
+      "auth/popup-blocked":
+        "Your browser blocked the Google sign-in popup.",
+
+      "auth/operation-not-allowed":
+        "Google sign-in is not enabled in Firebase.",
+
+      "auth/network-request-failed":
+        "Network error. Check your internet connection.",
+
+      "auth/account-exists-with-different-credential":
+        "This email already uses another sign-in method.",
+    };
+
+    setError(
+      messages[err?.code] ||
+      "Google sign-in failed. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <div style={S.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
@@ -94,8 +194,38 @@ export default function AuthModal({ onClose }) {
           <label style={S.label}>Email Address</label>
           <input style={S.input} type="email" placeholder="you@example.com" value={form.email} onChange={handle("email")} onFocus={onFocus} onBlur={onBlur} />
           <label style={S.label}>Password</label>
-          <input style={S.input} type="password" placeholder={mode==="signup" ? "Min. 6 characters" : "Your password"} value={form.password} onChange={handle("password")} onFocus={onFocus} onBlur={onBlur}
-            onKeyDown={e => e.key==="Enter" && handleSubmit()} />
+         <div style={{ position:"relative" }}>
+  <input
+    style={{ ...S.input, paddingRight:"65px" }}
+    type={showPassword ? "text" : "password"}
+    placeholder={mode==="signup" ? "Min. 6 characters" : "Your password"}
+    value={form.password}
+    onChange={handle("password")}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    onKeyDown={e => e.key==="Enter" && handleSubmit()}
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(v => !v)}
+    style={{
+      position:"absolute",
+      right:"10px",
+      top:"50%",
+      transform:"translateY(-50%)",
+      background:"transparent",
+      border:"none",
+      color:"#c8973a",
+      fontFamily:"'Courier New',monospace",
+      fontSize:"9px",
+      cursor:"pointer",
+      letterSpacing:"0.08em",
+    }}
+  >
+    {showPassword ? "HIDE" : "SHOW"}
+  </button>
+</div>
 
           {mode === "login" && (
             <div style={{ textAlign:"right", marginTop:"8px" }}>
