@@ -91,9 +91,9 @@ export default function TrendingPage({ articles, isLoading, error, onBack, onRet
                 <div style={{ padding:"28px", display:"flex", flexDirection:"column" }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:"12px", marginBottom:"12px" }}>
                     <h2 onClick={()=>onOpenDetail({...item,url:item.originalSource.url,publishedAt:item.publishedAt})}
-                      style={{ fontFamily:"'Libre Baskerville',Georgia,serif", fontSize:"1.35rem", fontWeight:700, color:"#faf6ef", lineHeight:1.35, cursor:"pointer", flex:1, transition:"color 0.2s" }}
-                      onMouseEnter={e=>e.currentTarget.style.color="#c8973a"}
-                      onMouseLeave={e=>e.currentTarget.style.color="#faf6ef"}
+                      style={{ fontFamily:"'Merriweather',Georgia,serif", fontSize:"1.35rem", fontWeight:700, color:"#171512", lineHeight:1.35, cursor:"pointer", flex:1, transition:"color 0.2s" }}
+                      onMouseEnter={e=>e.currentTarget.style.color="#8f672d"}
+                      onMouseLeave={e=>e.currentTarget.style.color="#171512"}
                     >{item.title}</h2>
                     <button onClick={()=>onToggleBookmark({url:item.originalSource.url,title:item.title,description:item.description,urlToImage:item.urlToImage,publishedAt:item.publishedAt,source:{name:item.originalSource.name}})}
                       style={{ fontSize:"1.3rem", background:"none", border:"none", cursor:"pointer", color: saved?"#c8973a":"#6b6560", transition:"all 0.2s", flexShrink:0 }}
@@ -113,7 +113,7 @@ export default function TrendingPage({ articles, isLoading, error, onBack, onRet
                     ))}
                   </div>
 
-                  <p style={{ fontSize:"0.9rem", color:"#9a9090", lineHeight:1.7, marginBottom:"20px", flex:1, fontStyle:"italic" }}>
+                  <p style={{ fontFamily:"'Merriweather',Georgia,serif", fontSize:"0.9rem", fontWeight:400, color:"#625b50", lineHeight:1.7, marginBottom:"20px", flex:1 }}>
                     {item.description}
                   </p>
 

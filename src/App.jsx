@@ -209,7 +209,7 @@ useEffect(() => {
                 ? "#8f672d"
                 : "#29251f",
             fontFamily:
-              '"Cormorant Garamond", Georgia, serif',
+              '"Outfit", sans-serif',
             fontSize: "14px",
             fontWeight: 600,
             letterSpacing: "0.09em",
@@ -261,7 +261,7 @@ useEffect(() => {
               ? "#8f672d"
               : "#29251f",
           fontFamily:
-            '"Cormorant Garamond", Georgia, serif',
+            '"Outfit", sans-serif',
           fontSize: "14px",
           fontWeight: 600,
           letterSpacing: "0.09em",
@@ -298,7 +298,7 @@ useEffect(() => {
               ? "#8f672d"
               : "#29251f",
           fontFamily:
-            '"Cormorant Garamond", Georgia, serif',
+            '"Outfit", sans-serif',
           fontSize: "14px",
           fontWeight: 600,
           letterSpacing: "0.09em",
@@ -331,7 +331,7 @@ useEffect(() => {
               ? "#8f672d"
               : "#29251f",
           fontFamily:
-            '"Cormorant Garamond", Georgia, serif',
+            '"Outfit", sans-serif',
           fontSize: "14px",
           fontWeight: 600,
           letterSpacing: "0.09em",

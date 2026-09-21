@@ -58,14 +58,14 @@ export default function DetailPage({ article, allArticles, onBack }) {
               ◆ {article.category}
             </span>
           )}
-          <h1 style={{ fontFamily:"'Libre Baskerville',Georgia,serif", fontSize:"1.75rem", fontWeight:700, color:"#faf6ef", lineHeight:1.35, marginBottom:"16px" }}>
+          <h1 style={{ fontFamily:"'Merriweather', Georgia, serif", fontSize:"1.75rem", fontWeight:700, color:"#faf6ef", lineHeight:1.35, marginBottom:"16px" }}>
             {article.title}
           </h1>
           <p style={{ fontFamily:"'Courier New',monospace", fontSize:"11px", color:"#6b6560", marginBottom:"20px", letterSpacing:"0.05em" }}>
             {article.source?.name} &nbsp;·&nbsp; {new Date(article.publishedAt).toDateString()}
           </p>
           <hr className="gold-rule" style={{ marginBottom:"20px" }} />
-          <p style={{ fontSize:"1rem", color:"#9a9090", lineHeight:1.75, marginBottom:"24px", fontStyle:"italic" }}>
+          <p style={{ fontFamily:"'Merriweather', Georgia, serif", fontSize:"1rem", color:"#9a9090", lineHeight:1.75, marginBottom:"24px", fontStyle:"italic" }}>
             {article.description || "No detailed description available."}
           </p>
           <a href={article.url} target="_blank" rel="noopener noreferrer"

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Merriweather:wght@400;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
 /* =========================================================
    RESET
@@ -205,7 +205,7 @@ nav {
 }
 
 nav button {
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
   font-weight: 600 !important;
 
   color: var(--ink-soft) !important;
@@ -218,7 +218,7 @@ nav button:hover {
 }
 
 nav input {
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
 
   background: rgba(255,255,255,0.28) !important;
 
@@ -237,7 +237,7 @@ nav input:focus {
 }
 
 nav button[class*="navbar-font"] {
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 /* Search button */
@@ -691,14 +691,14 @@ nav .navbar-font {
 
 nav .navbar-font {
   color: #29251f !important;
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 /* FORCE NAVBAR TEXT TO DARK INK */
 nav button.navbar-font,
 nav button.navbar-font span {
   color: #29251f !important;
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 /* Keep bookmark count white */
@@ -719,7 +719,7 @@ nav button.navbar-font[style*="rgba(167,122,53"] {
 .navbar-font,
 .navbar-font span {
   color: #29251f !important;
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 /* Keep bookmark count white */
@@ -734,7 +734,7 @@ nav button.navbar-font[style*="rgba(167,122,53"] {
 
 .site-navbar .navbar-font {
   color: #29251f !important;
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 .site-navbar .navbar-font:hover {
@@ -752,10 +752,107 @@ nav button.navbar-font[style*="rgba(167,122,53"] {
 
 .user-menu-button {
   color: #29251f !important;
-  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-family: "Outfit", sans-serif !important;
   background: transparent !important;
 }
 
 .user-menu-button:hover {
   color: #8f672d !important;
+}
+
+/* =========================================================
+   SITE NAVBAR LAYOUT
+========================================================= */
+
+.site-navbar {
+  background: rgba(250, 247, 239, 0.97);
+  border-bottom: 1px solid rgba(130, 95, 42, 0.28);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(60, 40, 10, 0.04);
+}
+
+.site-navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 52px;
+}
+
+.site-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: visible;
+  padding-right: 16px;
+  margin-right: 16px;
+  border-right: 1px solid rgba(130, 95, 42, 0.22);
+}
+
+.site-navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.site-navbar-search input {
+  width: 180px;
+  padding: 7px 12px;
+  background: rgba(255,255,255,0.38);
+  border: 1px solid rgba(130,95,42,0.34);
+  border-radius: 2px;
+  color: #171512;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 9px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.site-navbar-search input:focus {
+  border-color: rgba(130,95,42,0.65);
+  background: rgba(255,255,255,0.65);
+}
+
+.site-navbar-search input::placeholder {
+  color: #8a7f6e;
+}
+
+.search-button {
+  padding: 8px 18px;
+  background: #a77a35 !important;
+  border: none;
+  border-radius: 2px;
+  color: #fff9ed !important;
+  font-family: "Outfit", sans-serif !important;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.search-button:hover {
+  background: #8f672d;
+  transform: translateY(-1px);
+}
+
+.navbar-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  background: rgba(130, 95, 42, 0.28);
+  margin: 0 8px;
+  flex-shrink: 0;
 }

@@ -22,7 +22,7 @@ export default function UserMenu({ onShowAuth }) {
           color: "#29251f",
 
           fontFamily:
-            '"Cormorant Garamond", Georgia, serif',
+            '"Outfit", sans-serif',
           fontSize: "14px",
           fontWeight: 600,
           letterSpacing: "0.09em",
@@ -83,7 +83,7 @@ export default function UserMenu({ onShowAuth }) {
           color: "#29251f",
 
           fontFamily:
-            '"Cormorant Garamond", Georgia, serif',
+            '"Outfit", sans-serif',
           fontSize: "14px",
           fontWeight: 600,
 
@@ -121,7 +121,7 @@ export default function UserMenu({ onShowAuth }) {
           style={{
             color: "#29251f",
             fontFamily:
-              '"Cormorant Garamond", Georgia, serif',
+              '"Outfit", sans-serif',
             fontSize: "14px",
             fontWeight: 600,
 
@@ -183,7 +183,7 @@ export default function UserMenu({ onShowAuth }) {
                 color: "#171512",
 
                 fontFamily:
-                  '"Cormorant Garamond", Georgia, serif',
+                  '"Outfit", sans-serif',
 
                 fontSize: "17px",
                 fontWeight: 600,
