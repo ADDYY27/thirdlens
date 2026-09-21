@@ -27,7 +27,7 @@ export default function TrendingPage({ articles, isLoading, error, onBack, onRet
           <p style={{ fontFamily:"'Courier New',monospace", fontSize:"10px", color:"#6b6560", letterSpacing:"0.3em", textTransform:"uppercase", marginBottom:"12px" }}>
             Live Coverage Analysis
           </p>
-          <h1 style={{ fontFamily:"'UnifrakturMaguntia',cursive", fontSize:"clamp(2.5rem,5vw,4rem)", color:"#faf6ef", marginBottom:"12px" }}>
+          <h1 style={{ fontFamily:"'Playfair Display',Georgia,serif", fontSize:"clamp(2.5rem,5vw,4rem)", fontWeight:600, color:"#171512", marginBottom:"12px" }}>
             🔥 Trending Topics
           </h1>
           <p style={{ fontFamily:"'Libre Baskerville',Georgia,serif", fontStyle:"italic", color:"#6b6560", fontSize:"1rem" }}>
@@ -42,7 +42,7 @@ export default function TrendingPage({ articles, isLoading, error, onBack, onRet
       {error && !isLoading && (
         <div style={{ textAlign:"center", padding:"80px 20px" }}>
           <p style={{ fontSize:"3rem", marginBottom:"16px" }}>📰</p>
-          <h3 style={{ fontFamily:"'Libre Baskerville',Georgia,serif", color:"#faf6ef", marginBottom:"12px", fontSize:"1.5rem" }}>No Trending Topics Found</h3>
+          <h3 style={{ fontFamily:"'Libre Baskerville',Georgia,serif", color:"#171512", marginBottom:"12px", fontSize:"1.5rem" }}>No Trending Topics Found</h3>
           <p style={{ color:"#6b6560", marginBottom:"24px", fontFamily:"'Courier New',monospace", fontSize:"12px" }}>{error}</p>
           <button onClick={onRetry} style={{ padding:"12px 28px", background:"linear-gradient(135deg,#c8973a,#e8b85a)", border:"none", borderRadius:"3px", color:"#0a0a0a", fontFamily:"'Courier New',monospace", fontSize:"11px", fontWeight:900, letterSpacing:"0.15em", textTransform:"uppercase", cursor:"pointer" }}>
             🔄 Retry

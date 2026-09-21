@@ -45,7 +45,7 @@ export default function OpinionPage({ onShowAuth }) {
         <p style={{ fontFamily:"'Courier New',monospace",fontSize:"10px",color:"#6b6560",letterSpacing:"0.3em",textTransform:"uppercase",marginBottom:"12px" }}>
           Reader Voices · Independent Perspectives
         </p>
-        <h1 style={{ fontFamily:"'UnifrakturMaguntia',cursive",fontSize:"clamp(2.5rem,5vw,4rem)",color:"#faf6ef",marginBottom:"12px" }}>
+        <h1 style={{ fontFamily:"'Playfair Display',Georgia,serif",fontSize:"clamp(2.5rem,5vw,4rem)",fontWeight:600,color:"#171512",marginBottom:"12px" }}>
           Opinion
         </h1>
         <p style={{ fontFamily:"'Libre Baskerville',Georgia,serif",fontStyle:"italic",color:"#6b6560",fontSize:"1.05rem",maxWidth:"520px",margin:"0 auto 28px" }}>
