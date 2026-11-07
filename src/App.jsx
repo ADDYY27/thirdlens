@@ -9,7 +9,6 @@ import DetailPage from "./components/DetailPage";
 import LoadingState from "./components/LoadingState";
 import ErrorState from "./components/ErrorState";
 import AuthModal from "./components/AuthModal";
-import UserMenu from "./components/UserMenu";
 import OpinionPage from "./pages/OpinionPage";
 import { fetchTopHeadlines, fetchTrendingTopics } from "./services/newsApi";
 import { calculateArticleBias } from "./utils/newsUtils";
@@ -171,8 +170,6 @@ useEffect(() => {
     setShowBookmarks(false);
   }, []);
 
-  const NAV_ITEMS = ["general", "technology", "sports", "business"];
-
   return (
     <div
       style={{
@@ -182,208 +179,24 @@ useEffect(() => {
     >
       <Masthead />
 
-      {/* Navigation */}
-      {/* Navigation */}
-<nav className="site-navbar">
-  <div className="site-navbar-inner">
-    <div className="site-navbar-links">
-
-      {NAV_ITEMS.map((cat) => (
-        <button
-          key={cat}
-          className="navbar-font"
-          onClick={() => handleCategoryClick(cat)}
-          style={{
-            padding: "7px 16px",
-            background:
-              activeCategory === cat && view === "home"
-                ? "rgba(167,122,53,0.07)"
-                : "transparent",
-            border:
-              activeCategory === cat && view === "home"
-                ? "1px solid rgba(167,122,53,0.38)"
-                : "1px solid transparent",
-            borderRadius: "2px",
-            color:
-              activeCategory === cat && view === "home"
-                ? "#8f672d"
-                : "#29251f",
-            fontFamily:
-              '"Outfit", sans-serif',
-            fontSize: "14px",
-            fontWeight: 600,
-            letterSpacing: "0.09em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            whiteSpace: "nowrap",
-          }}
-          onMouseEnter={(e) => {
-            if (!(activeCategory === cat && view === "home")) {
-              e.currentTarget.style.color = "#8f672d";
-              e.currentTarget.style.background =
-                "rgba(167,122,53,0.045)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!(activeCategory === cat && view === "home")) {
-              e.currentTarget.style.color = "#29251f";
-              e.currentTarget.style.background = "transparent";
-            }
-          }}
-        >
-          {cat}
-        </button>
-      ))}
-
-      <span className="navbar-divider" />
-
-      {/* Opinion */}
-      <button
-        className="navbar-font"
-        onClick={() => {
-          setView("opinion");
+      <Navbar
+        activeCategory={activeCategory}
+        activeView={view}
+        onSelectCategory={handleCategoryClick}
+        onSelectView={(targetView) => {
+          setView(targetView);
           setShowBookmarks(false);
-        }}
-        style={{
-          padding: "7px 16px",
-          background:
-            view === "opinion"
-              ? "rgba(167,122,53,0.07)"
-              : "transparent",
-          border:
-            view === "opinion"
-              ? "1px solid rgba(167,122,53,0.38)"
-              : "1px solid transparent",
-          borderRadius: "2px",
-          color:
-            view === "opinion"
-              ? "#8f672d"
-              : "#29251f",
-          fontFamily:
-            '"Outfit", sans-serif',
-          fontSize: "14px",
-          fontWeight: 600,
-          letterSpacing: "0.09em",
-          textTransform: "uppercase",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          whiteSpace: "nowrap",
-        }}
-      >
-        ✍ Opinion
-      </button>
-
-      {/* Trending */}
-      <button
-        className="navbar-font"
-        onClick={() => {
-          setView("trending");
-          setShowBookmarks(false);
-          loadTrending();
-        }}
-        style={{
-          padding: "7px 16px",
-          background:
-            view === "trending"
-              ? "rgba(167,122,53,0.07)"
-              : "transparent",
-          border:
-            view === "trending"
-              ? "1px solid rgba(167,122,53,0.38)"
-              : "1px solid transparent",
-          borderRadius: "2px",
-          color:
-            view === "trending"
-              ? "#8f672d"
-              : "#29251f",
-          fontFamily:
-            '"Outfit", sans-serif',
-          fontSize: "14px",
-          fontWeight: 600,
-          letterSpacing: "0.09em",
-          textTransform: "uppercase",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          whiteSpace: "nowrap",
-        }}
-      >
-        🔥 Trending
-      </button>
-
-      {/* Bookmarks */}
-      <button
-        className="navbar-font"
-        onClick={() => setShowBookmarks(true)}
-        style={{
-          padding: "7px 15px",
-          background:
-            showBookmarks || bookmarks.length > 0
-              ? "rgba(167,122,53,0.07)"
-              : "transparent",
-          border:
-            showBookmarks || bookmarks.length > 0
-              ? "1px solid rgba(167,122,53,0.38)"
-              : "1px solid transparent",
-          borderRadius: "2px",
-          color:
-            showBookmarks || bookmarks.length > 0
-              ? "#8f672d"
-              : "#29251f",
-          fontFamily:
-            '"Outfit", sans-serif',
-          fontSize: "14px",
-          fontWeight: 600,
-          letterSpacing: "0.09em",
-          textTransform: "uppercase",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          whiteSpace: "nowrap",
-          display: "flex",
-          alignItems: "center",
-          gap: "7px",
-        }}
-      >
-        <span>📌</span>
-
-        <span style={{ color: "inherit" }}>
-          Bookmarks
-        </span>
-
-        <span className="bookmark-count">
-          {bookmarks.length}
-        </span>
-      </button>
-    </div>
-
-    {/* Search + User */}
-    <div className="site-navbar-search">
-
-      <input
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSearch();
+          if (targetView === "trending") {
+            loadTrending();
           }
         }}
-        placeholder="Search articles..."
-        aria-label="Search articles"
-      />
-
-      <button
-        className="search-button"
-        onClick={handleSearch}
-      >
-        Search
-      </button>
-
-      <UserMenu
+        onOpenBookmarks={() => setShowBookmarks(true)}
+        bookmarkCount={bookmarks.length}
+        searchInput={searchInput}
+        onSearchChange={setSearchInput}
+        onSearch={handleSearch}
         onShowAuth={() => setShowAuth(true)}
       />
-    </div>
-  </div>
-</nav>
 
       <main
         style={{

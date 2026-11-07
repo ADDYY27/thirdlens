@@ -684,57 +684,14 @@ nav button {
   color: var(--ink-soft);
 }
 
-/* Don't allow white text on paper navbar */
-nav .navbar-font {
-  color: var(--ink-soft) !important;
-}
-
-nav .navbar-font {
-  color: #29251f !important;
-  font-family: "Outfit", sans-serif !important;
-}
-
-/* FORCE NAVBAR TEXT TO DARK INK */
-nav button.navbar-font,
-nav button.navbar-font span {
-  color: #29251f !important;
-  font-family: "Outfit", sans-serif !important;
-}
-
-/* Keep bookmark count white */
-nav button.navbar-font span[style*="background"] {
-  color: #fffaf0 !important;
-  font-family: "IBM Plex Mono", monospace !important;
-}
-
-/* Active bookmark */
-nav button.navbar-font[style*="rgba(167,122,53"] {
-  color: #8f672d !important;
-}
-
-/* ================================
-   NAVBAR - FORCE DARK TEXT
-================================ */
-
-.navbar-font,
-.navbar-font span {
-  color: #29251f !important;
-  font-family: "Outfit", sans-serif !important;
-}
-
-/* Keep bookmark count white */
-.navbar-font span[style*="background"] {
-  color: #fffaf0 !important;
-  font-family: "IBM Plex Mono", monospace !important;
-}
-
 /* =========================================================
-   FINAL NAVBAR TEXT FIX
+   SITE NAVBAR & CONTROLS
 ========================================================= */
 
 .site-navbar .navbar-font {
   color: #29251f !important;
   font-family: "Outfit", sans-serif !important;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .site-navbar .navbar-font:hover {
@@ -742,8 +699,18 @@ nav button.navbar-font[style*="rgba(167,122,53"] {
 }
 
 .site-navbar .bookmark-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 16px;
+  padding: 0 5px;
+  background: var(--gold, #a77a35);
   color: #fffaf0 !important;
   font-family: "IBM Plex Mono", monospace !important;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: 9px;
 }
 
 /* =========================================================
