@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
 import {
-  collection, addDoc, getDocs, doc, updateDoc,
-  arrayUnion, arrayRemove, query, orderBy,
-  serverTimestamp, onSnapshot, where, increment,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  query,
+  orderBy,
+  serverTimestamp,
+  onSnapshot,
+  increment,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -89,16 +97,26 @@ export function useComments(opinionId) {
       collection(db, "opinions", opinionId, "comments"),
       orderBy("createdAt", "asc")
     );
-    const unsub = onSnapshot(q, (snap) => {
-      setComments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setLoading(false);
-    });
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        setComments(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Comments Firestore error:", err);
+        setError(err);
+        setComments([]);
+        setLoading(false);
+      }
+    );
     return unsub;
   }, [opinionId]);
 
-  async function addComment(opinionId, comment) {
-    const opRef = doc(db, "opinions", opinionId);
-    await addDoc(collection(db, "opinions", opinionId, "comments"), {
+  async function addComment(targetOpinionId, comment) {
+    const id = targetOpinionId || opinionId;
+    const opRef = doc(db, "opinions", id);
+    await addDoc(collection(db, "opinions", id, "comments"), {
       ...comment,
       likes: [],
       replies: [],
@@ -107,19 +125,25 @@ export function useComments(opinionId) {
     await updateDoc(opRef, { commentsCount: increment(1) });
   }
 
-  async function toggleCommentLike(opinionId, commentId, uid) {
-    const ref = doc(db, "opinions", opinionId, "comments", commentId);
-    const comment = comments.find(c => c.id === commentId);
+  async function toggleCommentLike(targetOpinionId, commentId, uid) {
+    const id = targetOpinionId || opinionId;
+    const ref = doc(db, "opinions", id, "comments", commentId);
+    const comment = comments.find((c) => c.id === commentId);
     const liked = comment?.likes?.includes(uid);
     await updateDoc(ref, { likes: liked ? arrayRemove(uid) : arrayUnion(uid) });
   }
 
-  async function addReply(opinionId, commentId, reply) {
-    const ref = doc(db, "opinions", opinionId, "comments", commentId);
+  async function addReply(targetOpinionId, commentId, reply) {
+    const id = targetOpinionId || opinionId;
+    const ref = doc(db, "opinions", id, "comments", commentId);
     await updateDoc(ref, {
-      replies: arrayUnion({ ...reply, id: Date.now().toString(), createdAt: new Date().toISOString() })
+      replies: arrayUnion({
+        ...reply,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+      }),
     });
   }
 
-  return { comments, loading, addComment, toggleCommentLike, addReply };
+  return { comments, loading, error, addComment, toggleCommentLike, addReply };
 }
