@@ -1,3 +1,5 @@
+import BiasBar from "./BiasBar";
+
 export default function NewsCard({
   article,
   onCardClick,
@@ -249,52 +251,7 @@ export default function NewsCard({
             paddingTop: "12px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              height: "3px",
-              borderRadius: "2px",
-              overflow: "hidden",
-              marginBottom: "6px",
-              background: "#ded5c5",
-            }}
-          >
-            <div
-              className="bias-bar-segment-left"
-              style={{
-                width: `${bias.left}%`,
-                transition: "width 0.8s",
-              }}
-            />
-
-            <div
-              className="bias-bar-segment-center"
-              style={{
-                width: `${bias.center}%`,
-                transition: "width 0.8s",
-              }}
-            />
-
-            <div
-              className="bias-bar-segment-right"
-              style={{
-                width: `${bias.right}%`,
-                transition: "width 0.8s",
-              }}
-            />
-          </div>
-
-          <p
-            style={{
-              fontFamily:
-                '"IBM Plex Mono", "Courier New", monospace',
-              fontSize: "8px",
-              letterSpacing: "0.07em",
-              color: "#807668",
-            }}
-          >
-            ◆ {bias.label}
-          </p>
+          <BiasBar stats={bias} size="sm" showLabels />
         </div>
       </div>
     </article>

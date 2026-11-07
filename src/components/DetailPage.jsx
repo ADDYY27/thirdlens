@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import BiasBar from "./BiasBar";
 import { calculateBiasStats, detectSourceFromURL, findSimilarArticles, getBiasInsight, formatBiasLabel } from "../utils/newsUtils";
 
 const BIAS_ORDER = { left:1,"center-left":2,center:3,"center-right":4,right:5 };
@@ -96,22 +97,7 @@ export default function DetailPage({ article, allArticles, onBack }) {
         <hr className="gold-rule" style={{ marginBottom:"32px" }} />
 
         {/* Big bias bar */}
-        <div style={{ display:"flex", height:"100px", borderRadius:"4px", overflow:"hidden", boxShadow:"0 4px 24px rgba(0,0,0,0.5)", marginBottom:"12px" }}>
-          {[
-            {label:"LEFT",pct:biasStats.left,bg:"linear-gradient(135deg,#3b7dd8,#2563eb)"},
-            {label:"CENTER",pct:biasStats.center,bg:"linear-gradient(135deg,#2da87a,#059669)"},
-            {label:"RIGHT",pct:biasStats.right,bg:"linear-gradient(135deg,#d84f3b,#dc2626)"},
-          ].map(({label,pct,bg})=>(
-            <div key={label} style={{ width:`${pct}%`, background:bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"white", fontWeight:900, transition:"all 0.8s cubic-bezier(0.4,0,0.2,1)", minWidth:pct>0?"60px":"0", overflow:"hidden" }}>
-              {pct>10&&<><span style={{ fontSize:"10px", letterSpacing:"0.2em", marginBottom:"6px", fontFamily:"'Courier New',monospace" }}>{label}</span><span style={{ fontSize:"2rem" }}>{pct}%</span></>}
-            </div>
-          ))}
-        </div>
-        <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"32px" }}>
-          {[{l:"Left",p:biasStats.left,c:"#3b7dd8"},{l:"Center",p:biasStats.center,c:"#2da87a"},{l:"Right",p:biasStats.right,c:"#d84f3b"}].map(({l,p,c})=>(
-            <span key={l} style={{ fontFamily:"'Courier New',monospace", fontSize:"10px", color:c, letterSpacing:"0.1em" }}>{l} {p}%</span>
-          ))}
-        </div>
+        <BiasBar stats={biasStats} size="lg" showLabels />
 
         {/* Sources */}
         <h3 style={{ fontFamily:"'Libre Baskerville',Georgia,serif", fontSize:"1.2rem", color:"#faf6ef", marginBottom:"16px" }}>📰 Sources Covering This Story</h3>

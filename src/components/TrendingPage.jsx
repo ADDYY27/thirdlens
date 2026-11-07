@@ -1,5 +1,6 @@
 import { calculateBiasStats } from "../utils/newsUtils";
 import LoadingState from "./LoadingState";
+import BiasBar from "./BiasBar";
 
 const BADGE_STYLES = {
   hot:      { bg:"linear-gradient(135deg,#d84f3b,#dc2626)", label:"🔥 HOT" },
@@ -128,17 +129,7 @@ export default function TrendingPage({ articles, isLoading, error, onBack, onRet
                     <p style={{ fontFamily:"'Courier New',monospace", fontSize:"9px", color:"#c8973a", letterSpacing:"0.2em", textTransform:"uppercase", marginBottom:"12px", fontWeight:700 }}>📊 Coverage Analysis</p>
                     {item.hasBiasAnalysis && biasStats ? (
                       <>
-                        <div style={{ display:"flex", height:"48px", borderRadius:"3px", overflow:"hidden", marginBottom:"10px", boxShadow:"0 2px 12px rgba(0,0,0,0.3)" }}>
-                          {[
-                            {pct:biasStats.left, bg:"linear-gradient(135deg,#3b7dd8,#2563eb)", l:"LEFT"},
-                            {pct:biasStats.center, bg:"linear-gradient(135deg,#2da87a,#059669)", l:"CENTER"},
-                            {pct:biasStats.right, bg:"linear-gradient(135deg,#d84f3b,#dc2626)", l:"RIGHT"},
-                          ].map(({pct,bg,l})=>(
-                            <div key={l} style={{ width:`${pct}%`, background:bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"white", fontWeight:900, minWidth:pct>0?"32px":"0", overflow:"hidden", transition:"width 0.8s", fontFamily:"'Courier New',monospace" }}>
-                              {pct>10&&<><span style={{ fontSize:"8px", letterSpacing:"0.15em" }}>{l}</span><span style={{ fontSize:"1rem" }}>{pct}%</span></>}
-                            </div>
-                          ))}
-                        </div>
+                        <BiasBar stats={biasStats} size="md" />
                         <p style={{ fontFamily:"'Courier New',monospace", fontSize:"9px", color:"#6b6560", textAlign:"center", marginBottom:"12px", letterSpacing:"0.05em" }}>
                           {item.sourceCount} sources · {biasStats.counts.left}L / {biasStats.counts.center}C / {biasStats.counts.right}R
                         </p>
