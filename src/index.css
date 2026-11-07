@@ -413,6 +413,29 @@ article span {
    BIAS BAR
 ========================================================= */
 
+.bias-bar-track {
+  display: flex;
+  overflow: hidden;
+}
+
+.bias-bar-track-sm {
+  height: 3px;
+  border-radius: 2px;
+  background: #ded5c5;
+}
+
+.bias-bar-track-md {
+  height: 48px;
+  border-radius: 3px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bias-bar-track-lg {
+  height: 100px;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
 .bias-bar-segment-left {
   background: linear-gradient(
     135deg,
@@ -435,6 +458,18 @@ article span {
     #e98b4d,
     #d87335
   ) !important;
+}
+
+.bias-bar-vibrant-left {
+  background: linear-gradient(135deg, #3b7dd8, #2563eb);
+}
+
+.bias-bar-vibrant-center {
+  background: linear-gradient(135deg, #2da87a, #059669);
+}
+
+.bias-bar-vibrant-right {
+  background: linear-gradient(135deg, #d84f3b, #dc2626);
 }
 
 /* =========================================================
